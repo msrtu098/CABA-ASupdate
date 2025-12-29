@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabañas Los Nietos - Tolhuin, Tierra del Fuego</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.7;
+            color: #3a3a3a;
+            background: #fafafa;
+            cursor: default;
+        }
+
+        /* Textura sutil de fondo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #4a6741 0%, #5d7a51 50%, #3d5234 100%);
+            color: white;
+            padding: 1.2rem 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .menu-btn {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.6);
+            color: white;
+            padding: 0.6rem 1.3rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Menu lateral */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9f8 100%);
+            box-shadow: -8px 0 25px rgba(0,0,0,0.15);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            padding: 2.5rem;
+        }
+
+        .side-menu.active {
+            right: 0;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+            z-index: 999;
+            backdrop-filter: blur(3px);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            font-size: 2.2rem;
+            cursor: pointer;
+            color: #4a6741;
+            float: right;
+            line-height: 1;
+            transition: all 0.3s;
+        }
+
+        .close-menu:hover {
+            transform: rotate(90deg);
+            color: #c0392b;
+        }
+
+        .menu-links {
+            margin-top: 3.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .menu-links a {
+            color: #4a6741;
+            text-decoration: none;
+            font-size: 1.15rem;
+            font-weight: 600;
+            padding: 1.1rem 1.2rem;
+            border-radius: 10px;
+            transition: all 0.3s;
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-links a:hover {
+            background: linear-gradient(90deg, #e8f5e3 0%, #f0f8ed 100%);
+            border-left-color: #5d7a51;
+            transform: translateX(5px);
+        }
+
+        /* Hero Section con Slider */
+        .hero-slider {
+            margin-top: 65px;
+            height: 85vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.85) contrast(1.1);
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(74, 103, 65, 0.45) 0%,
+                rgba(61, 82, 52, 0.55) 50%,
+                rgba(45, 60, 38, 0.65) 100%
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-content {
+            color: white;
+            padding: 2rem;
+            max-width: 850px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            text-shadow: 3px 3px 12px rgba(0,0,0,0.4), 1px 1px 3px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease;
+            letter-spacing: -1px;
+        }
+
+        .hero-content p {
+            font-size: 1.35rem;
+            margin-bottom: 2.2rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+            animation: fadeInUp 1.2s ease;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1.4s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1.1rem 2.8rem;
+            background: linear-gradient(135deg, #6b8f5f 0%, #5d7a51 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 6px 20px rgba(93, 122, 81, 0.35);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #7a9e6d 0%, #6b8f5f 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(93, 122, 81, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.25);
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.35);
+            border-color: white;
+        }
+
+        /* Slider Controls */
+        .slider-controls {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.45);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .dot:hover {
+            background: rgba(255,255,255,0.7);
+            transform: scale(1.2);
+        }
+
+        .dot.active {
+            background: white;
+            width: 35px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Bienvenida */
+        .bienvenida {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9f8 100%);
+            text-align: center;
+            position: relative;
+        }
+
+        .bienvenida::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a6741' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .bienvenida h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: #4a6741;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .bienvenida p {
+            max-width: 850px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: #5a5a5a;
+            line-height: 1.9;
+            position: relative;
+        }
+
+        /* Servicios */
+        .servicios {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, #f5f7f5 0%, #eef2ee 100%);
+        }
+
+        .servicios h2 {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            color: #4a6741;
+            font-size: 2.8rem;
+            margin-bottom: 3.5rem;
+            font-weight: 800;
+        }
+
+        .servicios-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .servicio-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(74, 103, 65, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .servicio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #5d7a51, #6b8f5f);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .servicio-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .servicio-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(74, 103, 65, 0.15), 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .servicio-icon {
+            font-size: 3.8rem;
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .servicio-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: #4a6741;
+            margin-bottom: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .servicio-card p {
+            color: #666;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* Alojamientos Preview */
+        .alojamientos-preview {
+            padding: 5rem 2rem 5rem;
+            background: white;
+        }
+
+        .alojamientos-preview h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: #4a6741;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .alojamientos-preview p {
+            max-width: 850px;
+            margin: 0 auto 2rem;
+            font-size: 1.2rem;
+            color: #5a5a5a;
+            line-height: 1.9;
+            text-align: center;
+        }
+
+        .ver-mas-btn {
+            display: block;
+            text-align: center;
+            margin: 3rem auto 0;
+            max-width: 320px;
+        }
+
+        /* Reseñas */
+        .resenas {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #5d7a51 0%, #4a6741 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .resenas h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .resenas p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .resenas-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-resena {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            background: white;
+            color: #4a6741;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-resena:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: #f5f7f5;
+        }
+
+        .estrellas-decoracion {
+            font-size: 2rem;
+            margin-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* WhatsApp Flotante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #25D366 0%, #20ba5a 100%);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4), 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4), 0 2px 8px rgba(0,0,0,0.2);
+            }
+            50% {
+                box-shadow: 0 6px 35px rgba(37, 211, 102, 0.6), 0 2px 8px rgba(0,0,0,0.3);
+            }
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 8px 35px rgba(37, 211, 102, 0.6);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #2d3e2a 0%, #3d5234 100%);
+            color: white;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #a8c99e;
+        }
+
+        .footer-section p, .footer-section a {
+            color: rgba(255,255,255,0.85);
+            line-height: 1.9;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.6rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .servicios-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .testimonios-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .hero-content h1 {
+                font-size: 4.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .servicios-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .testimonios-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('menuOverlay');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        let currentSlide = 0;
+        let slideInterval;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            currentSlide = (n + slides.length) % slides.length;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function startAutoSlide() {
+            slideInterval = setInterval(nextSlide, 5500);
+        }
+
+        function resetAutoSlide() {
+            clearInterval(slideInterval);
+            startAutoSlide();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.querySelector('.hero-slider');
+            showSlide(0);
+            startAutoSlide();
+            
+            slider.addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+            
+            slider.addEventListener('mouseleave', () => {
+                startAutoSlide();
+            });
+            
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                    resetAutoSlide();
+                });
+            });
+        });
+    </script>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                 Cabañas Los Nietos</div>
+            <button class="menu-btn" onclick="toggleMenu()">Menú</button>
+        </div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+    <div class="side-menu" id="sideMenu">
+        <button class="close-menu" onclick="toggleMenu()">×</button>
+        <nav class="menu-links">
+            <a href="alojamientos.html"> Alojamientos</a>
+            <a href="Ubicacion.html"> Ubicación</a>
+            <a href="contacto.html"> Contacto</a>
+            <a href="#resenas">Opiniones</a>
+        </nav>
+    </div>
+
+    <section class="hero-slider">
+        <div class="slide active">
+            <img src="https://i.imgur.com/rbTHXi5.jpeg" alt="Departamentos" class="slide-image">
+            <div class="slide-overlay">
+                <div class="hero-content">
+                    <h1>¡Bienvenidos a Cabañas los Nietos!</h1>
+                    <p>En el corazón de Tierra del Fuego</p>
+                    <div class="hero-buttons">
+                        <a href="alojamientos.html" class="btn">Ver Alojamientos</a>
+                        <a href="contacto.html" class="btn btn-secondary">Consultar disponibilidad</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="https://i.imgur.com/spMcMsg.jpeg" alt="exterior departamentos" class="slide-image">
+            <div class="slide-overlay">
+                <div class="hero-content">
+                    <h1>Comodidad y naturaleza</h1>
+                    <p>Departamentos completamente equipados para su estadía en Tolhuin</p>
+                    <div class="hero-buttons">
+                        <a href="alojamientos.html" class="btn">Conocer departamentos</a>
+                        <a href="contacto.html" class="btn btn-secondary">Reservar ahora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="https://i.imgur.com/UXojf6w.jpeg" alt="Naturaleza" class="slide-image">
+            <div class="slide-overlay">
+                <div class="hero-content">
+                    <h1>Descubra Tierra del Fuego</h1>
+                    <p>A minutos del Lago Fagnano y rodeado de naturaleza patagónica</p>
+                    <div class="hero-buttons">
+                        <a href="alojamientos.html" class="btn">Ver ubicación</a>
+                        <a href="contacto.html" class="btn btn-secondary">Contactar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slider-controls">
+            <span class="dot active" onclick="showSlide(0)"></span>
+            <span class="dot" onclick="showSlide(1)"></span>
+            <span class="dot" onclick="showSlide(2)"></span>
+        </div>
+    </section>
+
+    <section class="bienvenida">
+        <h2>Bienvenidos a Cabañas Los Nietos</h2>
+        <p>Ofrecemos alojamiento en departamentos completamente equipados. Nuestro objetivo es brindar un espacio de paz y tranquilidad donde las familias puedan disfrutar de la naturaleza de Tierra del Fuego. Los departamentos cuentan con todas las comodidades necesarias para que se tenga una estadía agradable, incluyendo cocina completa, calefacción, y espacios exteriores con parrilla. Nos encargamos personalmente de la atención, asegurando que cada huésped tenga una experiencia memorable en nuestra región.</p>
+    </section>
+
+    <section class="servicios">
+        <h2>¿Por qué elegirnos?</h2>
+        <div class="servicios-grid">
+            <div class="servicio-card">
+                
+                <h3>Ubicación </h3>
+                <p>En el centro de Tolhuin, cerca del Lago Fagnano y con fácil acceso a servicios y comercios</p>
+            </div>
+            <div class="servicio-card">
+                
+                <h3>Totalmente equipados</h3>
+                <p>Cocina completa con horno, televisión con cable y todo lo necesario para su comodidad</p>
+            </div>
+            <div class="servicio-card">
+                
+                <h3>Ideal para familias</h3>
+                <p>Capacidad para hasta 5 personas, con espacios amplios y seguros para la familia</p>
+            </div>
+            <div class="servicio-card">
+                
+                <h3>Espacios exteriores</h3>
+                <p>Patio privado con fogón y parrilla, perfecto para disfrutar al aire libre</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="alojamientos-preview">
+        <h2>Nuestros Departamentos</h2>
+        <p>Contamos con tres departamentos, cada uno equipado con todo lo necesario para que su estadía sea de lo mas confortable. Incluyen patio con fogón y parrilla, cocina completa con horno, televisión con videocable y camas de calidad. Nuestro servicio es personalizado, ya que somos nosotros, los propietarios, quienes atendemos directamente a nuestros huéspedes, asegurando una atención cálida y profesional.</p>
+        <a href="alojamientos.html" class="btn ver-mas-btn">Ver todos los departamentos</a>
+    </section>
+
+    <section id="resenas" class="resenas">
+        <h2>Comparta su experiencia</h2>
+        <p>Su opinión es muy importante para nosotros y para futuros huéspedes. Si ya se ha alojado en nuestras cabañas, lo invitamos a dejarnos una reseña en Google Maps.</p>
+        <div class="resenas-buttons">
+            <a href="https://maps.app.goo.gl/yp8pxxzWN8eSm5hb8" target="_blank" class="btn-resena">
+                 Dejar reseña en Google Maps
+            </a>
+        </div>
+        <div class="estrellas-decoracion">★ ★ ★ ★ ★</div>
+    </section>
+
+    <a href="https://wa.me/549455851" target="_blank" class="whatsapp-float" title="Contactar por WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+        </svg>
+    </a>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Cabañas Los Nietos</h3>
+                <p> Zenone 70, Tolhuin</p>
+                <p>Tierra del Fuego, Argentina</p>
+                <p> +54 9 2964 455851</p>
+                <p> @cabanaslosnietos</p>
+            </div>
+            <div class="footer-section">
+                <h3>Navegación</h3>
+                <a href="alojamientos.html">Alojamientos</a>
+                <a href="Ubicacion.html">Ubicación</a>
+                <a href="contacto.html">Contacto</a>
+                <a href="#resenas">Opiniones</a>
+            </div>
+            <div class="footer-section">
+                <h3>Información</h3>
+                <p>Check-in: 14:00 hs</p>
+                <p>Check-out: 11:00 hs</p>
+                <p>Atención: 9:00 - 21:00 hs</p>
+                <p>Abierto todos los días</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Cabañas Los Nietos - Tolhuin, Tierra del Fuego</p>
+            
+        </div>
+    </footer>
+</body>
+</html>

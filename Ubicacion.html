@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubicación - Cabañas Los Nietos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.7;
+            color: #3a3a3a;
+            background: #fafafa;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #4a6741 0%, #5d7a51 50%, #3d5234 100%);
+            color: white;
+            padding: 1.2rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.6);
+            color: white;
+            padding: 0.6rem 1.3rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+        }
+
+        .intro-section {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: #4a6741;
+            margin-bottom: 1rem;
+            font-size: 2.8rem;
+            font-weight: 800;
+        }
+
+        .intro-text {
+            color: #666;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .ubicacion-card {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid rgba(74, 103, 65, 0.08);
+            overflow: hidden;
+        }
+
+        .direccion {
+            background: linear-gradient(135deg, #f5f7f5 0%, #eef2ee 100%);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-bottom: 4px solid #5d7a51;
+        }
+
+        .direccion-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .direccion h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: #4a6741;
+            margin-bottom: 1.2rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .direccion-detalles {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .direccion-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0.8rem 0;
+            color: #5a5a5a;
+            font-size: 1.1rem;
+        }
+
+        .direccion-item svg {
+            color: #5d7a51;
+            flex-shrink: 0;
+        }
+
+        .direccion-item strong {
+            color: #4a6741;
+            font-weight: 600;
+        }
+
+        .mapa-section {
+            padding: 2rem;
+        }
+
+        .mapa-container {
+            width: 100%;
+            height: 450px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 2px solid rgba(93, 122, 81, 0.1);
+        }
+
+        .mapa-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .info-adicional {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid rgba(74, 103, 65, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(74, 103, 65, 0.12), 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .info-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: #4a6741;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 0.8rem;
+        }
+
+        .info-card ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .info-card ul li {
+            padding: 0.5rem 0;
+            color: #5a5a5a;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+        }
+
+        .info-card ul li::before {
+            content: "→";
+            color: #5d7a51;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .btn-direcciones {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 1rem 2.2rem;
+            background: linear-gradient(135deg, #6b8f5f 0%, #5d7a51 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 4px 15px rgba(93, 122, 81, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-direcciones::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-direcciones:hover::before {
+            left: 100%;
+        }
+
+        .btn-direcciones:hover {
+            background: linear-gradient(135deg, #7a9e6d 0%, #6b8f5f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(93, 122, 81, 0.35);
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .mapa-container {
+                height: 500px;
+            }
+
+            .info-adicional {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .direccion {
+                padding: 2rem 1.5rem;
+            }
+
+            .mapa-section {
+                padding: 1.5rem;
+            }
+
+            .mapa-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo"> Cabañas Los Nietos</a>
+            <a href="index.html" class="back-btn"> Volver</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="intro-section">
+            <h1>Nuestra Ubicación</h1>
+            
+        </div>
+
+        <div class="ubicacion-card">
+            <div class="direccion">
+                
+                <h2>Dirección completa</h2>
+                <div class="direccion-detalles">
+                    <div class="direccion-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                        </svg>
+                        <span><strong>Zenone 70</strong></span>
+                    </div>
+                    <div class="direccion-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+                            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                        <span>Tolhuin, Tierra del Fuego</span>
+                    </div>
+                    <div class="direccion-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+                        </svg>
+                        <span>Argentina</span>
+                    </div>
+                </div>
+                <a href="https://www.google.com/maps/dir//CABA%C3%91A+%22LOS+NIETOS%22,+Zenone+70,+V9240+Tolhuin,+Tierra+del+Fuego/@-54.5142992,-67.1961302,17z/" target="_blank" class="btn-direcciones">
+                     Cómo llegar
+                </a>
+            </div>
+
+            <div class="mapa-section">
+                <div class="mapa-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2316.088581142548!2d-67.19613022372191!3d-54.51429915860386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xbc4bc345660f22fd%3A0x3bdb355c0880ea21!2zQ0FCQcORQSAiTE9TIE5JRVRPUyI!5e0!3m2!1ses-419!2sar!4v1766365898942!5m2!1ses-419!2sar" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+</body>
+</html>
